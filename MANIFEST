@@ -4,7 +4,7 @@ Changes
 README.md
 lib/CSS/Sass.pm
 lib/CSS/Sass.xs
-ppport.h
+lib/CSS/ppport.h
 t/00_sanity.t
 t/01_xs.t
 t/02_perl.t
@@ -60,6 +60,7 @@ libsass/prelexer.cpp
 libsass/prelexer.hpp
 libsass/sass_interface.cpp
 libsass/sass_interface.h
+libsass/sass_values.cpp
 libsass/sass_values.h
 libsass/selector.cpp
 libsass/selector.hpp
