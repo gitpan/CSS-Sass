@@ -64,6 +64,5 @@ libsass/sass_values.h
 libsass/selector.cpp
 libsass/selector.hpp
 libsass/test_node_factory.cpp
-Makefile.PL
 META.yml
 META.json

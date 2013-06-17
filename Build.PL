@@ -29,13 +29,13 @@ my $builder = Module::Build->new(
     requires => {
     },
     add_to_cleanup     => [ 'CSS-Sass-*' ],
-    create_makefile_pl => 'traditional',
     $Config{cc} eq 'clang' ? (
         # clang has a bunch of asinine warnings on by default:
         extra_compiler_flags => '-Wno-parentheses -Wno-tautological-compare -Wno-unused-value',
     ) : (),
     extra_linker_flags   => '',
     c_source     => 'libsass',
+    config => { ld => 'c++' }, # Need to link with a C++ linker since libsass is C++ (even though the .xs file is not)
 );
 
 $builder->create_build_script();
