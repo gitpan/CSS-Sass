@@ -1066,7 +1066,8 @@ namespace Sass {
       for (size_t i = 0; i < num_params; ++i) {
         c_args.list.values[i] = bindings[f.parameter_names[i].token()].to_c_val();
       }
-      union Sass_Value c_val = f.c_func(c_args);
+      c_args.list.length = num_params;
+      union Sass_Value c_val = f.c_func(c_args, f.cookie);
       if (c_val.unknown.tag == SASS_ERROR) {
         throw_eval_error(bt, "error in C function " + f.name + ": " + c_val.error.message, path, line);
       }
@@ -1647,9 +1648,10 @@ namespace Sass {
         node = ctx.new_Node(Node::string_constant, path, line, Token::make(copy));
       } break;
       case SASS_LIST: {
-        Node list(ctx.new_Node(Node::list, path, line, v.list.length));
+        node = ctx.new_Node(Node::list, path, line, v.list.length);
+        node.is_comma_separated() = v.list.separator == SASS_COMMA;
         for (size_t i = 0; i < v.list.length; ++i) {
-          list << c_val_to_node(v.list.values[i], ctx, bt, path, line);
+          node << c_val_to_node(v.list.values[i], ctx, bt, path, line);
         }
       } break;
       case SASS_ERROR: {

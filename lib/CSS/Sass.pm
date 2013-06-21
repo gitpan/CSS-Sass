@@ -19,7 +19,7 @@ our @EXPORT = qw(
 	SASS_STYLE_COMPRESSED
 );
 
-our $VERSION = '0.4.0'; # Always keep the rightmost digit, even if it's zero (stupid perl).
+our $VERSION = v0.5.0; # Always keep the rightmost digit, even if it's zero (stupid perl).
 
 require XSLoader;
 XSLoader::load('CSS::Sass', $VERSION);
@@ -43,7 +43,8 @@ sub sass_compile {
     my $r = compile_sass($sass_code, { %options,
                                        # Override include_paths with a ':' separated list
                                        !$options{include_paths} ? ()
-                                                                : (include_paths => join(':', @{$options{include_paths}})),
+                                                                : (include_paths => join($^O eq 'MSWin32' ? ';' : ':',
+                                                                                         @{$options{include_paths}})),
                                      });
     wantarray ? ($r->{output_string}, $r->{error_message}) : $r->{output_string}
 }

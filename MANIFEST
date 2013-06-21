@@ -65,5 +65,6 @@ libsass/sass_values.h
 libsass/selector.cpp
 libsass/selector.hpp
 libsass/test_node_factory.cpp
+LICENSE
 META.yml
 META.json
