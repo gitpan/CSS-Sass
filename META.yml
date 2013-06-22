@@ -17,7 +17,25 @@ name: CSS-Sass
 provides:
   CSS::Sass:
     file: lib/CSS/Sass.pm
-    version: v0.5.0
+    version: v0.6.0
+  CSS::Sass::Type:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Boolean:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Color:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Dimension:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Error:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::List:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Number:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::Percentage:
+    file: lib/CSS/Sass/Type.pm
+  CSS::Sass::Type::String:
+    file: lib/CSS/Sass/Type.pm
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.5.0
+version: v0.6.0

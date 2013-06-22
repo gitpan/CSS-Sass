@@ -19,10 +19,11 @@ our @EXPORT = qw(
 	SASS_STYLE_COMPRESSED
 );
 
-our $VERSION = v0.5.0; # Always keep the rightmost digit, even if it's zero (stupid perl).
+our $VERSION = v0.6.0; # Always keep the rightmost digit, even if it's zero (stupid perl).
 
 require XSLoader;
 XSLoader::load('CSS::Sass', $VERSION);
+require CSS::Sass::Type;
 
 sub new {
     my ($class, %options) = @_;
@@ -41,6 +42,10 @@ sub last_error {
 sub sass_compile {
     my ($sass_code, %options) = @_;
     my $r = compile_sass($sass_code, { %options,
+                                       # Override sass_functions with the arrayref of arrayrefs that the XS expects.
+                                       !$options{sass_functions} ? ()
+                                                                 : (sass_functions => [ map { [ $_ => $options{sass_functions}->{$_} ]
+                                                                                            } keys %{$options{sass_functions}} ]),
                                        # Override include_paths with a ':' separated list
                                        !$options{include_paths} ? ()
                                                                 : (include_paths => join($^O eq 'MSWin32' ? ';' : ':',
@@ -55,6 +60,16 @@ sub compile {
     ($compiled, $self->{last_error}) = sass_compile($sass_code, %{$self->options});
     croak $self->{last_error} if $self->{last_error} && !$self->options->{dont_die};
     $compiled
+}
+
+sub sass_function_callback {
+    my $cb = shift;
+    my $ret = eval { $cb->(map { CSS::Sass::Type->new_from_xs_rep($_) } @_) };
+    return CSS::Sass::Type::Error->new("$@")->xs_rep if $@;
+    return CSS::Sass::Type::String->new('')->xs_rep if !defined $ret;
+    return CSS::Sass::Type::Error->new("Perl Sass function returned something that wasn't a CSS::Sass::Type")->xs_rep
+        unless ref $ret && $ret->isa("CSS::Sass::Type");
+    $ret->xs_rep;
 }
 
 1;
@@ -78,7 +93,10 @@ CSS::Sass - Compile .scss files using libsass
                             image_path      => 'base_url',
                             output_style    => SASS_STYLE_COMPRESSED,
                             source_comments => 1,
-                            dont_die        => 1);
+                            dont_die        => 1,
+                            sass_functions  => {
+                              'my_sass_function($arg)' => sub { $_[0] }
+                            });
   my $css = $sass->compile(".something { color: red; }");
   if (!defined $css) { # $css can be undef because 'dont_die' was set
     warn $sass->last_error;
@@ -210,9 +228,42 @@ is set to C<'file:///tmp/a/b/c'>, then the follwoing Sass code:
 This is only valid when used with the L<Object Oriented Interface|/"OBJECT ORIENTED INTERFACE">. It is
 described in detail there.
 
+=item C<sass_functions>
+
+This is a hash of Sass functions implemented in Perl. The key for each
+function should be the function's Sass signature and the value should be a
+Perl subroutine reference. This subroutine will be called whenever the
+function is used in the Sass being compiled. The arguments to the subroutine
+are L<CSS::Sass::Type> objects and the return value I<must> also be one of
+those types. It may also return C<undef> which is just a shortcut for
+CSS::Sass::Type::String->new('').
+
+The function is called with an C<eval> statement so you may use "die" to
+throw errors back to libsass.
+
+A simple example:
+
+    sass_functions => {
+        'append_hello($str)' => sub {
+            my ($str) = @_;
+            die '$str should be a string' unless $str->isa("CSS::Sass::Type::String");
+            return CSS::Sass::Type::String->new($str->value . " hello");
+        }
+    }
+
+If this is encountered in the Sass:
+
+    some_rule: append_hello("Well,");
+
+Then the ouput would be:
+
+    some_rule: Well, hello;
+
 =back
 
 =head1 SEE ALSO
+
+L<CSS::Sass::Type>
 
 L<The Sass Home Page|http://sass-lang.com/>
 
