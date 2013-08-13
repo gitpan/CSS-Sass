@@ -17,7 +17,7 @@ name: CSS-Sass
 provides:
   CSS::Sass:
     file: lib/CSS/Sass.pm
-    version: v0.6.0
+    version: v0.7.0
   CSS::Sass::Type:
     file: lib/CSS/Sass/Type.pm
   CSS::Sass::Type::Boolean:
@@ -38,4 +38,4 @@ provides:
     file: lib/CSS/Sass/Type.pm
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.6.0
+version: v0.7.0
