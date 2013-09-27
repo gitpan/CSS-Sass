@@ -70,4 +70,3 @@ libsass/selector.hpp
 libsass/test_node_factory.cpp
 LICENSE
 META.yml
-META.json

@@ -7,8 +7,7 @@ build_requires:
   Test::More: 0
 configure_requires:
   Module::Build: 0
-dynamic_config: 1
-generated_by: 'Module::Build version 0.4005, CPAN::Meta::Converter version 2.130880'
+generated_by: 'Module::Build version 0.3603'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -17,7 +16,7 @@ name: CSS-Sass
 provides:
   CSS::Sass:
     file: lib/CSS/Sass.pm
-    version: v0.7.0
+    version: v0.8.0
   CSS::Sass::Type:
     file: lib/CSS/Sass/Type.pm
   CSS::Sass::Type::Boolean:
@@ -38,4 +37,4 @@ provides:
     file: lib/CSS/Sass/Type.pm
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.7.0
+version: v0.8.0
